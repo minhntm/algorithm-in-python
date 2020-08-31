@@ -39,13 +39,11 @@ class Trie:
 
             if current_node.children[index] is None:
                 current_node.children[index] = TrieNode(key[level])
-                print(key[level] + " inserted")
 
             current_node = current_node.children[index]
 
         # Mark the end character as leaf node
         current_node.mark_as_leaf()
-        print("'" + key + "' inserted")
 
     # Function to search a given key in Trie
     def search(self, key):
