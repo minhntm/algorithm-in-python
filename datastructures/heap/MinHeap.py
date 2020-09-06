@@ -33,22 +33,22 @@ class MinHeap:
             self.__percolateUp(parent)
 
     def __minHeapify(self, index):
-        left = 2*index + 1
-        right = 2*index + 2
-        largest = index
+        left = index * 2 + 1
+        right = index * 2 + 2
+        smallest = index
 
-        if len(self.heap) > left and self.heap[largest] > self.heap[left]:
-            largest = left
-        if len(self.heap) > right and self.heap[largest] > self.heap[right]:
-            largest = right
-        if largest != index:
-            self.heap[largest], self.heap[index] = \
-                self.heap[index], self.heap[largest]
-            self.__minHeapify(largest)
+        if len(self.heap) > left and self.heap[smallest] > self.heap[left]:
+            smallest = left
+        if len(self.heap) > right and self.heap[smallest] > self.heap[right]:
+            smallest = right
+        if smallest != index:
+            self.heap[smallest], self.heap[index] = \
+                self.heap[index], self.heap[smallest]
+            self.__minHeapify(smallest)
 
     def buildHeap(self, arr):
         self.heap = arr
-        for i in reversed(range(len(arr))):
+        for i in reversed(range(len(arr)//2)):
             self.__minHeapify(i)
 
 

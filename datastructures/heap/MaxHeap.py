@@ -48,7 +48,7 @@ class MaxHeap:
 
     def buildHeap(self, arr):
         self.heap = arr
-        for i in reversed(range(len(arr))):
+        for i in reversed(range(len(arr)//2)):
             self.__maxHeapify(i)
 
 
