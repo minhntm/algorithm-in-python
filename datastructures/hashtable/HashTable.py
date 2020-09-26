@@ -20,14 +20,28 @@ class HashTable:
     def is_empty(self):
         return self.get_size() == 0
 
-    # Hash Function
-    def get_index(self, key):
-        # hash is a built in function in Python
-        hash_code = hash(key)
-        index = hash_code % self.slots
-        return index
+    def __hash_int(self, key):
+        return key % self.slots
 
-    def resize(self):
+    def __hash_str(self, key):
+        sum_ord = 0
+        for letter in key:
+            sum_ord += ord(letter)
+        return sum_ord % self.slots
+
+    # Hash Function
+    def __get_index(self, key):
+        if type(key) is int:
+            return self.__hash_int(key)
+        elif type(key) is str:
+            return self.__hash_str(key)
+        elif type(key) is float:
+            return self.__hash_str(str(key))
+        else:
+            raise ValueError(f'Value of type {type(key)} can not be hashed.',
+                             'Key type must be int, str or float')
+
+    def __resize(self):
         new_slots = self.slots * 2
         new_bucket = [None] * new_slots
         # rehash all items into new slots
@@ -54,7 +68,7 @@ class HashTable:
 
     def insert(self, key, value):
         # Find the node with the given key
-        b_index = self.get_index(key)
+        b_index = self.__get_index(key)
         if self.bucket[b_index] is None:
             self.bucket[b_index] = HashEntry(key, value)
             self.size += 1
@@ -73,12 +87,12 @@ class HashTable:
         load_factor = float(self.size) / float(self.slots)
         # Checks if 60% of the entries in table are filled, threshold = 0.6
         if load_factor >= self.threshold:
-            self.resize()
+            self.__resize()
 
     # Return a value for a given key
     def search(self, key):
         # Find the node with the given key
-        b_index = self.get_index(key)
+        b_index = self.__get_index(key)
         head = self.bucket[b_index]
         # Search key in the slots
         while head is not None:
@@ -91,7 +105,7 @@ class HashTable:
     # Remove a value based on a key
     def delete(self, key):
         # Find index
-        b_index = self.get_index(key)
+        b_index = self.__get_index(key)
         head = self.bucket[b_index]
         # If key exists at first slot
         if head.key is key:
@@ -129,3 +143,9 @@ if __name__ == "__main__":
     table.delete("is")
     table.delete("a")
     print("Table Size: " + str(table.get_size()))
+
+    table.insert(1, "next")
+    table.insert(11, "test")
+    print("The value for '1' key: " + str(table.search(1)))
+    print("The value for '11' key: " + str(table.search(11)))
+    table.insert((1, 2), "insert tuple")
